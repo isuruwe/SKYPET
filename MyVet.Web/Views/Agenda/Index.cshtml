@@ -1,0 +1,262 @@
+﻿@model IEnumerable<MyVet.Web.Data.Entities.Agenda>
+
+@{ ViewData["Title"] = "Index"; }
+
+
+
+
+<link href="~/js/jvectormap/jquery-jvectormap.css" rel="stylesheet">
+
+<link href="~/js/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+<link href="~/js/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link href="~/js/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+<link href="~/js/Ionicons/css/ionicons.min.css" rel="stylesheet">
+
+
+
+<link href="~/js/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+@*<link href="./_.__CLIPPERS__.._files/AdminLTE.min.css" rel="stylesheet">
+<link href="./_.__CLIPPERS__.._files/AdminLTE.min.css" rel="stylesheet">*@
+@*<link href="./_.__CLIPPERS__.._files/_all-skins.min.css" rel="stylesheet">*@
+
+<link href="~/js/morris.js/morris.css" rel="stylesheet">
+
+<link href="~/js/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet">
+
+<link href="~/js/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+
+<link href="~/js/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.css" rel="stylesheet">
+<link href="~/js/bootstrap-slider/slider.css" rel="stylesheet">
+<link href="~/js/select2/dist/css/select2.min.css" rel="stylesheet">
+<link href="~/js/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+<link href="~/js/plugins/timepicker/bootstrap-timepicker.min.css" rel="stylesheet">
+<link href="~/js/plugins/iCheck/all.css" rel="stylesheet">
+<link href="~/js/plugins/pace/pace.min.css" rel="stylesheet">
+<link href="~/js/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="~/css/jquery.dataTables.min.css" />
+<br />
+<div class="col-md-1">
+    <a asp-action="Assing" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i></a>
+</div>
+<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Appointments</h3>
+        </div>
+        <div class="panel-body">
+
+            <div class="row">
+                <div class="col-md-9" style="width:100%;">
+                    <div class="box box-primary" style="width:100%;">
+                        <div class="box-body no-padding " style="width:100%;">
+                            <div id="calendar"></div>
+                            <div id="myModel" class="modal fade" role="dialog">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dissmiss="modal">&times;</button>
+                                            <h4 class="modal-title"><span id="eventTitle"></span></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p id="pDetails"></p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dissmiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    @*<p>
+                <a asp-action="AddDays" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Add Days</a>
+            </p>
+
+        <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Agenda</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-hover table-responsive table-striped" id="MyTable">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Date)
+                                    </th>
+                                    <th>
+                                        Owner
+                                    </th>
+                                    <th>
+                                        Pet
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Remarks)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.IsAvailable)
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DateLocal)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Owner.User.FullName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Pet.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Remarks)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IsAvailable)
+                                        </td>
+                                        <td>
+                                            @if (item.IsAvailable)
+                                            {
+                                                <a asp-action="Assing" class="btn btn-default" asp-route-id="@item.Id"><i class="glyphicon glyphicon-plus"></i></a>
+                                            }
+                                            else
+                                            {
+                                                <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog"><i class="glyphicon glyphicon-minus"></i></button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+    <!--U-assign agenda-->
+    <div class="modal fade" id="deleteDialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Un-assign Agenda</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure to un-assign this appoiment?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="btnYesDelete">Un-Assign</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+
+        <script src="~/js/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
+        <script src="~/js/datatables.net/js/jquery.dataTables.min.js"></script>
+        <script src="~/js/moment/moment.js"></script>
+        <script src="~/js/fullcalendar/dist/fullcalendar.min.js"></script>
+
+
+
+
+
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#MyTable').DataTable();
+
+                // Delete item
+                var item_to_delete;
+
+                $('.deleteItem').click((e) => {
+                    item_to_delete = e.currentTarget.dataset.id;
+                });
+
+                $("#btnYesDelete").click(function () {
+                    window.location.href = '/Agenda/Unassign/' + item_to_delete;
+                });
+            });
+        </script>
+
+
+        <script>
+            $(document).ready(function () {
+                var events = [];
+                $.ajax({
+                    type: "GET",
+                      url: '@Url.Action("getEvents", "Agenda")',
+                       success: function (data) {
+                        $.each(data, function (i, v) {
+                            debugger
+                            events.push({
+
+                                description: v.organizerName,
+                                title: v.reservationId,
+                                remarks: v.remarks,
+                                start: moment(v.reserveDate),
+                                end: v.reserveDate
+                            });
+                        })
+                        GenarateCalender(events);
+                    },
+                    error: function (ex) {
+                        alert(ex.responseText);
+                    }
+                })
+
+                function GenarateCalender(events) {
+                    debugger;
+                    $('#calendar').fullCalendar('destroy');
+                    $('#calendar').fullCalendar({
+                        contentHeight: 400,
+                        defaultDate: new Date(),
+                        timeFormat: 'h(:mm)a',
+                        header: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'month,basicWeek,basicDay'
+                        },
+                        eventLimit: true,
+                        eventColor: 'DE9494',
+                        events: events,
+                        eventRender: function (calEvent, element) {
+                            element.find('.fc-title').append("<br/>" + calEvent.description);
+                        },
+                        eventClick: function (calEvent, jsEvent, View) {
+                            alert(" Reservation No - " + calEvent.title + "\n Person Name - " + calEvent.description + "\n Remarks - " + calEvent.remarks + "\n Reservation Date - " + calEvent.start.format("DD-MMM-YYYY HH:mm a"));
+                            $('#myModel #eventTitle').text(calEvent.description);
+                            var $description = $('<div/>');
+                            $description.append($('<p/>').html('<b>Start:<b/>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
+                            $description.append($('<p/>').html('<b>Owner:<b/>' + calEvent.description));
+                            $description.append($('<p/>').html('<b>Description:<b/>' + calEvent.remarks));
+                            $('#myModel #pDetails').empty().html($description);
+                            $('#myModel').modal;
+                        }
+                    })
+                }
+            })
+        </script>
+
+
+    }

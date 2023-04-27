@@ -1,0 +1,154 @@
+﻿@model MyVet.Web.Models.PetViewModel
+
+@{ ViewData["Title"] = "Create"; }
+
+<h2>Create</h2>
+
+<h4>Pet</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*<input type="hidden" asp-for="OwnerId" />*@
+            <div class="form-group">
+                <label class="control-label">NIC Number</label>
+
+                <input asp-for="OwnerId" type="hidden" class="form-control" />
+
+                <input id="owid" type="text" class="form-control" />
+
+                <span asp-validation-for="OwnerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Owner</label>
+                <input type="text" id="ownm" disabled class="form-control" />
+
+            </div>
+            <div class="form-group">
+                <label class="control-label">Pet Name</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input asp-for="ImageFile" class="form-control" type="file" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Species</label>
+                <select asp-for="PetTypeId" asp-items="Model.PetTypes" class="form-control"></select>
+                <span asp-validation-for="PetTypeId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Breed</label>
+                <input asp-for="Race" class="form-control" />
+                <span asp-validation-for="Race" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Born" class="control-label"></label>
+                <input asp-for="Born" class="form-control" />
+                <span asp-validation-for="Born" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Remarks" class="control-label"></label>
+                <textarea asp-for="Remarks" class="form-control"></textarea>
+                <span asp-validation-for="Remarks" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="MyPets" asp-route-id="@Model.OwnerId" class="btn btn-success">Back to My Pets</a>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            @*$("#owid").change(function () {
+
+                $("#PetId").empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("getpet", "Agenda")',
+                    contentType: 'application/json',
+                    data: { id: $("#OwnerId").val() },
+                    success: function (pets) {
+                        debugger;
+                        $("#PetId").append('<option value="0">(Select a pet...)</option>');
+                        $.each(pets, function (i, pet) {
+                            $("#PetId").append('<option value="'
+                                + pet.id + '">'
+                                + pet.name + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        debugger;
+                        alert('Failed to retrieve pets.' + ex.statusText);
+                    }
+                });
+                return false;
+            })*@
+            function getp(oid){
+                $("#PetId").empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("getpet", "Agenda")',
+                    contentType: 'application/json',
+                    data: { id: oid },
+                    success: function (pets) {
+                        debugger;
+                        $("#PetId").append('<option value="0">(Select a pet...)</option>');
+                        $.each(pets, function (i, pet) {
+                            $("#PetId").append('<option value="'
+                                + pet.id + '">'
+                                + pet.name + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        debugger;
+                        alert('Failed to retrieve pets.' + ex.statusText);
+                    }
+                });
+
+            }
+            $("#owid").change(function () {
+
+               // $("#PetId").empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("getow", "Agenda")',
+                    contentType: 'application/json',
+                    data: { id: $("#owid").val() },
+                    success: function (pets) {
+                        debugger;
+
+                        //$("#PetId").append('<option value="0">(Select a pet...)</option>');
+                        $.each(pets, function (i, pet) {
+                            //$("#PetId").append('<option value="'
+                            //    + pet.id + '">'
+                            //    + pet.name + '</option>');
+                            //alert(pet.id);
+                            getp(pet.id);
+                            $('#OwnerId').val(pet.id);
+                            $('#ownm').val(pet.user.fullName);
+
+                        });
+                    },
+                    error: function (ex) {
+                        debugger;
+                        alert('Failed to retrieve pets.' + ex.statusText);
+                    }
+                });
+                return false;
+            })
+        });
+    </script>
+}

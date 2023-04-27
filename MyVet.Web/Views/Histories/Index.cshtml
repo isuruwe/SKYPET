@@ -1,0 +1,189 @@
+﻿
+@model MyVet.Web.Models.HistoryViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<link rel="stylesheet" href="~/css/jquery.dataTables.min.css" />
+
+<p>
+    <a asp-action="Create" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Create New</a>
+</p>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"></h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-hover table-responsive table-striped" id="MyTable">
+            <thead>
+                <tr>
+                    <th>
+                      Owner  NIC No
+                    </th>
+                    <th>
+                        Pet Name
+                    </th>
+                    <th>
+                        Owner Name
+                    </th>
+                    <th>
+                        Service Type
+                    </th>
+                    <th>
+                        Investigation Notes
+                    </th>
+                    <th>
+                        Date
+                    </th>
+                    <th>
+                        Price
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in (IEnumerable<MyVet.Web.Data.Entities.History>)ViewBag.sd)
+                {
+                <tr>
+                    <td>
+
+                        @item.Pet.Owner.User.Document
+                    </td>
+                    <td>
+
+                        @item.Pet.Name
+                    </td>
+                    <td>
+                        @item.Pet.Owner.User.FullName
+                    </td>
+                    <td>
+                        @item.ServiceType.Name
+                    </td>
+                    <td>
+                        @item.Remarks
+                    </td>
+                    <td>
+                        @item.Date
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+
+                        <a target="_blank" asp-controller="Home" asp-action="GeneratePdf" class="btn btn-default" asp-route-id="@item.Id"><i class="glyphicon glyphicon-print"></i> </a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+       
+
+        @section Scripts {
+            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+            <script src="~/js/datatables.net/js/jquery.dataTables.min.js"></script>
+
+            <script type="text/javascript">
+
+
+        $(document).ready(function () {
+            $('#MyTable').DataTable();
+
+            // Delete item
+            var item_to_delete;
+
+            $('.deleteItem').click((e) => {
+                item_to_delete = e.currentTarget.dataset.id;
+            });
+
+            $("#btnYesDelete").click(function () {
+                window.location.href = '/Pets/Delete/' + item_to_delete;
+            });
+        });
+       
+         $(document).ready(function () {
+            @*$("#owid").change(function () {
+
+                $("#PetId").empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("getpet", "Agenda")',
+                    contentType: 'application/json',
+                    data: { id: $("#OwnerId").val() },
+                    success: function (pets) {
+                        debugger;
+                        $("#PetId").append('<option value="0">(Select a pet...)</option>');
+                        $.each(pets, function (i, pet) {
+                            $("#PetId").append('<option value="'
+                                + pet.id + '">'
+                                + pet.name + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        debugger;
+                        alert('Failed to retrieve pets.' + ex.statusText);
+                    }
+                });
+                return false;
+            })*@
+
+            function getp(oid){
+                $("#PetId").empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("getpet", "Agenda")',
+                    contentType: 'application/json',
+                    data: { id: oid },
+                    success: function (pets) {
+                        debugger;
+                        $("#PetId").append('<option value="0">(Select a pet...)</option>');
+                        $.each(pets, function (i, pet) {
+                            $("#PetId").append('<option value="'
+                                + pet.id + '">'
+                                + pet.name + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        debugger;
+                        alert('Failed to retrieve pets.' + ex.statusText);
+                    }
+                });
+
+            }
+            $("#owid").change(function () {
+
+               // $("#PetId").empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("getow", "Agenda")',
+                    contentType: 'application/json',
+                    data: { id: $("#owid").val() },
+                    success: function (pets) {
+                        debugger;
+
+                        //$("#PetId").append('<option value="0">(Select a pet...)</option>');
+                        $.each(pets, function (i, pet) {
+                            //$("#PetId").append('<option value="'
+                            //    + pet.id + '">'
+                            //    + pet.name + '</option>');
+                            //alert(pet.id);
+                            getp(pet.id);
+                            $('#OwnerId').val(pet.id);
+                            $('#ownm').val(pet.user.fullName);
+
+                        });
+                    },
+                    error: function (ex) {
+                        debugger;
+                        alert('Failed to retrieve pets.' + ex.statusText);
+                    }
+                });
+                return false;
+            })
+        });
+
+
+            </script>
+        }

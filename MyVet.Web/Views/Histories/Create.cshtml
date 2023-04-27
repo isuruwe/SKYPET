@@ -1,0 +1,257 @@
+﻿@model MyVet.Web.Models.HistoryViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Treatments</h2>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">NIC Number</label>
+
+                <input asp-for="OwnerID" type="hidden" class="form-control" />
+
+                <input id="owid" type="text" class="form-control" />
+
+                <span asp-validation-for="OwnerID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Owner</label>
+                <input type="text" id="ownm" disabled class="form-control" />
+
+            </div>
+            <div class="form-group">
+                <label class="control-label">Pet</label>
+                <select asp-for="PetId" asp-items="Model.Pets" class="form-control"></select>
+                <span asp-validation-for="PetId" class="text-danger"></span>
+            </div>
+           
+
+            @*<div class="form-group">
+                    <label asp-for="Date" class="control-label"></label>
+                    <input asp-for="Date" class="form-control" />
+                    <span asp-validation-for="Date" class="text-danger"></span>
+                </div>*@
+          
+            
+            <div class="form-group">
+                <input type="button" value="Save" onclick="savep();" class="btn btn-default" />
+            </div>
+        </form>
+    </div>  <div class="col-md-4">
+    <div class="form-group">
+        <label>Consultation</label>
+
+        <input id="cons" type="text" class="form-control" />
+
+    </div>
+    <div class="form-group">
+        <label>Medication</label>
+
+        <input id="medi" type="text" class="form-control" />
+
+    </div>
+    <div class="form-group">
+        <label>Surgery</label>
+
+        <input id="surg" type="text" class="form-control" />
+
+    </div>
+    <div class="form-group">
+        <label>Dispencing</label>
+
+        <input id="dis" type="text" class="form-control" />
+
+    </div>
+    <div class="form-group">
+        <label>Disposables</label>
+
+        <input id="dio" type="text" class="form-control" />
+
+    </div>
+    <div class="form-group">
+        <label>Others</label>
+
+        <input id="oth" type="text" class="form-control" />
+
+    </div>
+    <div class="form-group">
+        <label>Diagnostic Tests</label>
+
+        <input id="dgn" type="text" class="form-control" />
+
+    </div>
+    <div class="form-group">
+        <label>X-Ray USS</label>
+
+        <input id="uss" type="text" class="form-control" />
+
+    </div>
+</div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Price</label>
+
+                    <input id="consp" type="number" class="form-control" />
+                </div>
+                <div class="form-group">
+
+                    <label>&nbsp; </label>
+                    <input id="medip" type="number" class="form-control" />
+                </div>
+                <div class="form-group">
+
+                    <label> &nbsp;</label>
+                    <input id="surgp" type="number" class="form-control" />
+                </div>
+                <div class="form-group">
+
+                    <label> &nbsp;</label>
+                    <input id="disp" type="number" class="form-control" />
+                </div>
+                <div class="form-group">
+
+                    <label>&nbsp; </label>
+                    <input id="diop" type="number" class="form-control" />
+                </div>
+                <div class="form-group">
+
+                    <label>&nbsp; </label>
+                    <input id="othp" type="number" class="form-control" />
+                </div>
+                <div class="form-group">
+
+                    <label>&nbsp; </label>
+                    <input id="dgnp" type="number" class="form-control" />
+                </div>
+                <div class="form-group">
+
+                    <label>&nbsp; </label>
+                    <input id="ussp" type="number" class="form-control" />
+                </div>
+            </div>
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script type="text/javascript">
+
+        function savep() {
+            $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("savep", "Histories")',
+                    contentType: 'application/json',
+                data: {
+                    pid: $("#PetId").val(), cons: $("#cons").val(), medi: $("#medi").val(),
+                    surg: $("#surg").val(), dis: $("#dis").val(), dio: $("#dio").val(),
+                    oth: $("#oth").val(), dgn: $("#dgn").val(), uss: $("#uss").val(),
+                    consp: $("#consp").val(), medip: $("#medip").val(),
+                    surgp: $("#surgp").val(), disp: $("#disp").val(), diop: $("#diop").val(),
+                    othp: $("#othp").val(), dgnp: $("#dgnp").val(), ussp: $("#ussp").val()
+                    },
+                    success: function (pets) {
+                        debugger;
+                        alert("Success!");
+
+                        var elements = document.getElementsByTagName("input");
+                        for (var ii = 0; ii < elements.length; ii++) {
+                            if (elements[ii].type == "text") {
+                                elements[ii].value = "";
+                            }
+                        }
+                    },
+                    error: function (ex) {
+                        debugger;
+                        alert('Failed to Save' + ex.statusText);
+                    }
+                });
+        }
+
+        $(document).ready(function () {
+            @*$("#owid").change(function () {
+
+                $("#PetId").empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("getpet", "Agenda")',
+                    contentType: 'application/json',
+                    data: { id: $("#OwnerId").val() },
+                    success: function (pets) {
+                        debugger;
+                        $("#PetId").append('<option value="0">(Select a pet...)</option>');
+                        $.each(pets, function (i, pet) {
+                            $("#PetId").append('<option value="'
+                                + pet.id + '">'
+                                + pet.name + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        debugger;
+                        alert('Failed to retrieve pets.' + ex.statusText);
+                    }
+                });
+                return false;
+            })*@
+            function getp(oid){
+                $("#PetId").empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("getpet", "Agenda")',
+                    contentType: 'application/json',
+                    data: { id: oid },
+                    success: function (pets) {
+                        debugger;
+                        $("#PetId").append('<option value="0">(Select a pet...)</option>');
+                        $.each(pets, function (i, pet) {
+                            $("#PetId").append('<option value="'
+                                + pet.id + '">'
+                                + pet.name + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        debugger;
+                        alert('Failed to retrieve pets.' + ex.statusText);
+                    }
+                });
+
+            }
+            $("#owid").change(function () {
+
+               // $("#PetId").empty();
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("getow", "Agenda")',
+                    contentType: 'application/json',
+                    data: { id: $("#owid").val() },
+                    success: function (pets) {
+                        debugger;
+
+                        //$("#PetId").append('<option value="0">(Select a pet...)</option>');
+                        $.each(pets, function (i, pet) {
+                            //$("#PetId").append('<option value="'
+                            //    + pet.id + '">'
+                            //    + pet.name + '</option>');
+                            //alert(pet.id);
+                            getp(pet.id);
+                            $('#OwnerId').val(pet.id);
+                            $('#ownm').val(pet.user.fullName);
+
+                        });
+                    },
+                    error: function (ex) {
+                        debugger;
+                        alert('Failed to retrieve pets.' + ex.statusText);
+                    }
+                });
+                return false;
+            })
+        });
+</script>
+}
